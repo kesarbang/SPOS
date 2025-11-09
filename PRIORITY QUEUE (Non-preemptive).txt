@@ -1,0 +1,119 @@
+PRIORITY QUEUE :(Non-preemptive)
+
+CODE:-
+
+
+import java.util.Scanner;
+
+class Priority						
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of processes: ");
+        int n = sc.nextInt();
+
+        int[] at = new int[n];
+        int[] bt = new int[n];
+        int[] pr = new int[n];
+        int[] ct = new int[n];
+        int[] wt = new int[n];
+        int[] tat = new int[n];
+        boolean[] completed = new boolean[n];
+
+        for (int i = 0; i < n; i++)
+        {
+            System.out.print("\nEnter Arrival Time of Process " + (i+1) + ": ");
+            at[i] = sc.nextInt();
+            System.out.print("Enter Burst Time of Process " + (i+1) + ": ");
+            bt[i] = sc.nextInt();
+            System.out.print("Enter Priority of Process " + (i+1) + ": ");
+            pr[i] = sc.nextInt();
+        }
+
+        int pt = 0, completedCount = 0;
+        while (completedCount < n)
+        {
+            int idx = -1;
+            int highestPr = Integer.MAX_VALUE;
+
+            for (int i = 0; i < n; i++)
+            {
+                if (at[i] <= pt && !completed[i] && pr[i] < highestPr)
+                {
+                    highestPr = pr[i];
+                    idx = i;
+                }
+            }
+
+            if (idx != -1)
+            {
+                pt += bt[idx];
+                ct[idx] = pt;
+                tat[idx] = ct[idx] - at[idx];
+                wt[idx] = tat[idx] - bt[idx];
+                completed[idx] = true;
+                completedCount++;
+            }
+            else
+            {
+                pt++;
+            }
+        }
+
+        
+		System.out.printf("%n%-10s | %-5s | %-5s | %-10s | %-5s | %-5s%n", 
+						  "Process", "AT", "BT", "Priority", "WT", "TAT");
+		System.out.println("----------------------------------------------------------");
+
+		
+		for (int i = 0; i < n; i++) 
+		{
+			System.out.printf("%-10s | %-5d | %-5d | %-10d | %-5d | %-5d%n",
+							  "P" + (i + 1), at[i], bt[i], pr[i], wt[i], tat[i]);
+		}
+
+        int totalWT = 0, totalTAT = 0;
+        for (int i = 0; i < n; i++)
+        {
+            totalWT += wt[i];
+            totalTAT += tat[i];
+        }
+
+        float avgWT = (float) totalWT / n;
+        float avgTAT = (float) totalTAT / n;
+
+        System.out.println("\nAverage Waiting Time: " + avgWT);
+        System.out.println("Average Turnaround Time: " + avgTAT);
+    }
+}
+
+OUTPUT:-
+
+Enter number of processes: 4
+
+Enter Arrival Time of Process 1: 1
+Enter Burst Time of Process 1: 10
+Enter Priority of Process 1: 1
+
+Enter Arrival Time of Process 2: 0
+Enter Burst Time of Process 2: 9
+Enter Priority of Process 2: 2
+
+Enter Arrival Time of Process 3: 3
+Enter Burst Time of Process 3: 15
+Enter Priority of Process 3: 3
+
+Enter Arrival Time of Process 4: 2
+Enter Burst Time of Process 4: 17
+Enter Priority of Process 4: 4
+
+Process    | AT    | BT    | Priority   | WT    | TAT  
+----------------------------------------------------------
+P1         | 1     | 10    | 1          | 8     | 18   
+P2         | 0     | 9     | 2          | 0     | 9    
+P3         | 3     | 15    | 3          | 16    | 31   
+P4         | 2     | 17    | 4          | 32    | 49   
+
+Average Waiting Time: 14.0
+Average Turnaround Time: 26.75

@@ -1,0 +1,79 @@
+SJF(Pre-emptive):
+
+CODE:-
+
+import java.util.*;
+
+public class SJF_Preemptive {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter number of processes: ");
+        int n = sc.nextInt();
+
+        int[] at = new int[n];
+        int[] bt = new int[n];
+        int[] rt = new int[n];
+        int[] wt = new int[n];
+        int[] tat = new int[n];
+        int[] ct = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter Arrival Time of P" + (i+1) + ": ");
+            at[i] = sc.nextInt();
+            System.out.print("Enter Burst Time of P" + (i+1) + ": ");
+            bt[i] = sc.nextInt();
+            rt[i] = bt[i];
+        }
+
+        int completed = 0, time = 0;
+        while (completed < n) {
+            int idx = -1, min = Integer.MAX_VALUE;
+            for (int i = 0; i < n; i++) {
+                if (at[i] <= time && rt[i] > 0 && rt[i] < min) {
+                    min = rt[i];
+                    idx = i;
+                }
+            }
+            if (idx == -1) { time++; continue; }
+            rt[idx]--;
+            time++;
+            if (rt[idx] == 0) {
+                completed++;
+                ct[idx] = time;
+                tat[idx] = ct[idx] - at[idx];
+                wt[idx] = tat[idx] - bt[idx];
+            }
+        }
+
+        double avgWT = 0, avgTAT = 0;
+        System.out.println("P\tAT\tBT\tWT\tTAT");
+        for (int i = 0; i < n; i++) {
+            avgWT += wt[i];
+            avgTAT += tat[i];
+            System.out.println("P" + (i+1) + "\t" + at[i] + "\t" + bt[i] + "\t" + wt[i] + "\t" + tat[i]);
+        }
+        System.out.println("Average WT = " + (avgWT/n));
+        System.out.println("Average TAT = " + (avgTAT/n));
+    }
+}
+
+OUTPUT:-
+
+Enter number of processes: 4
+Enter Arrival Time of P1: 0
+Enter Burst Time of P1: 7
+Enter Arrival Time of P2: 2
+Enter Burst Time of P2: 4
+Enter Arrival Time of P3: 4
+Enter Burst Time of P3: 1
+Enter Arrival Time of P4: 5
+Enter Burst Time of P4: 4
+P	AT	BT	WT	TAT
+P1	0	7	9	16
+P2	2	4	1	5
+P3	4	1	0	1
+P4	5	4	2	6
+Average WT = 3.0
+Average TAT = 7.0
+
+
